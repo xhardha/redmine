@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: database
+  name: service-db
+  labels:
+    app: redmine
+    tier: sql
+spec:
+  ports:
+      # service port
+    - port: 3306
+      # port to container
+      targetPort: 3306
+  selector:
+    app: redmine
+    tier: sql
+  clusterIP: None

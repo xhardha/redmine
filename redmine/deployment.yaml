@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redmine
+  namespace: redmine
+  labels:
+    app: redmine
+    tier: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redmine
+      tier: front
+  template:
+    metadata:
+      labels:
+        app: redmine
+        tier: front
+    spec:
+      containers:
+      - name: redmine
+        image: redmine
+        ports:
+        - containerPort: 3000
+#        env:
+#        - name: REDMINE_DB_MYSQL
+#          value: "service-db.database"
+#        - name: REDMINE_DB_PASSWORD
+#          value: "redmine"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 330
+          periodSeconds: 10
+        envFrom: 
+        - configMapRef:
+            name: cm-redmine
+        - secretRef:
+            name: secret-redmine       
+        volumeMounts:
+        - name: pvc
+          mountPath: /usr/src/redmine/file
+#        - name: config
+#          mountPath: /etc/config
+#        - name: secret
+#          mountPath: /etc/secrets
+      volumes:
+      - name: pvc
+        persistentVolumeClaim:
+          claimName: redmine-pvc
+#      - name: config
+#        configMap: 
+#          name: cm-redmine
+#      - name: secret
+#        secret: 
+#          secretName: secret-redmine
