@@ -5,7 +5,7 @@ metadata:
   namespace: database
   labels:
     app: redmine
-    tier: sql
+    tier: mysql
 spec:
   storageClassName: manual
   capacity:

@@ -5,14 +5,12 @@ metadata:
   name: service-db
   labels:
     app: redmine
-    tier: sql
+    tier: mysql
 spec:
   ports:
-      # service port
     - port: 3306
-      # port to container
       targetPort: 3306
   selector:
     app: redmine
-    tier: sql
+    tier: mysql
   clusterIP: None
